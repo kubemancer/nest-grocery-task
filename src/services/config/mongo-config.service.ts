@@ -2,11 +2,17 @@ import {
   MongooseOptionsFactory,
   MongooseModuleOptions,
 } from '@nestjs/mongoose';
+import { awsSecret } from '../utils/aws.secrets.config';
+// import { awsSecret } from '../utils/aws.secrets.config';
 
 export class MongoConfigService implements MongooseOptionsFactory {
-  createMongooseOptions(): MongooseModuleOptions {
+  // connectionString = await awsSecret();
+  async createMongooseOptions(): Promise<MongooseModuleOptions> {
+    const secret = await awsSecret();
+    const { MONGODB_URI } = JSON.parse(secret);
     return {
-      uri: 'mongodb+srv://khalilchettaoui06:0E5b1zp3MdtxWFqn@cluster0.ih0muwh.mongodb.net/?tls=true&tlsCertificateKeyFile=%2FUsers%2Fkhalil%2FDocuments%2FX509-cert-7573717406175880810.pem',
+      uri: MONGODB_URI,
+      // uri: connectionString,
     };
   }
 }
